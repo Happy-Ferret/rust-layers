@@ -84,6 +84,8 @@ static TEXTURE_FRAGMENT_SHADER_SOURCE: &'static str = "
 ";
 
 static SOLID_COLOR_FRAGMENT_SHADER_SOURCE: &'static str = "
+    #version 100
+
     #ifdef GL_ES
         precision mediump float;
     #endif
@@ -95,6 +97,8 @@ static SOLID_COLOR_FRAGMENT_SHADER_SOURCE: &'static str = "
 ";
 
 static TEXTURE_VERTEX_SHADER_SOURCE: &'static str = "
+    #version 100
+
     attribute vec2 aVertexPosition;
     attribute vec2 aVertexUv;
 
@@ -111,6 +115,8 @@ static TEXTURE_VERTEX_SHADER_SOURCE: &'static str = "
 ";
 
 static SOLID_COLOR_VERTEX_SHADER_SOURCE: &'static str = "
+    #version 100
+
     attribute vec2 aVertexPosition;
 
     uniform mat4 uMVMatrix;
@@ -189,7 +195,7 @@ struct TextureProgram {
 impl TextureProgram {
     fn new(sampler_function: &str, sampler_type: &str) -> TextureProgram {
         let fragment_shader_source
-             = fmt::format(format_args!("#define samplerFunction {}\n#define samplerType {}\n{}",
+             = fmt::format(format_args!("#version 100\n#define samplerFunction {}\n#define samplerType {}\n{}",
                                         sampler_function,
                                         sampler_type,
                                         TEXTURE_FRAGMENT_SHADER_SOURCE));
@@ -248,7 +254,7 @@ impl TextureProgram {
     #[cfg(target_os="macos")]
     fn create_rectangle_program_if_necessary() -> Option<TextureProgram> {
         gl::enable(gl::TEXTURE_RECTANGLE_ARB);
-        Some(TextureProgram::new("texture2DRect", "sampler2DRect"))
+        Some(TextureProgram::new("texture2D", "sampler2D"))
     }
 
     #[cfg(not(target_os="macos"))]
